@@ -28,7 +28,7 @@ O sistema conta com **3 entidades de negócio** principais:
 ```mermaid
 erDiagram
     USUARIO ||--o{ AGENDAMENTO : "realiza"
-    SERVICO ||--o{ AGENDAMENTO : "pertence a"
+    AGENDAMENTO }o--|| SERVICO : "inclui"
 
     USUARIO {
         uuid id PK
