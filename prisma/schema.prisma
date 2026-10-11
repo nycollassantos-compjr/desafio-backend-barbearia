@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Perfil {
+  CLIENTE
+  ADMIN
+}
+
+enum StatusAgendamento {
+  AGENDADO
+  CONCLUIDO
+  CANCELADO
+  INDISPONIVEL
+}
+
+model Usuario {
+  id           String        @id @default(uuid())
+  nome         String
+  email        String        @unique
+  senha_hash   String
+  telefone     String
+  perfil       Perfil        @default(CLIENTE)
+  agendamentos Agendamento[]
+
+  @@map("usuarios")
+}
+
+model Servico {
+  id              String        @id @default(uuid())
+  nome            String
+  descricao       String?       @db.Text
+  duracao_minutos Int
+  preco           Decimal       @db.Decimal(10, 2)
+  ativo           Boolean       @default(true)
+  agendamentos    Agendamento[]
+
+  @@map("servicos")
+}
+
+model Agendamento {
+  id          String            @id @default(uuid())
+  usuario_id  String
+  servico_id  String
+  data_hora   DateTime
+  status      StatusAgendamento @default(AGENDADO)
+  observacoes String?           @db.Text
+
+  usuario Usuario @relation(fields: [usuario_id], references: [id])
+  servico Servico @relation(fields: [servico_id], references: [id])
+
+  @@map("agendamentos")
+}
