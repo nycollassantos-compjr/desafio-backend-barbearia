@@ -20,13 +20,15 @@ enum StatusAgendamento {
 }
 
 model Usuario {
-  id           String        @id @default(uuid())
-  nome         String
-  email        String        @unique
-  senha_hash   String
-  telefone     String
-  perfil       Perfil        @default(CLIENTE)
-  agendamentos Agendamento[]
+  id                     String        @id @default(uuid())
+  nome                   String
+  email                  String        @unique
+  senha_hash             String
+  telefone               String
+  perfil                 Perfil        @default(CLIENTE)
+  reset_password_token   String?
+  reset_password_expires DateTime?
+  agendamentos           Agendamento[]
 
   @@map("usuarios")
 }
