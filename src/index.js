@@ -2,6 +2,7 @@ const express = require('express');
 require('dotenv').config();
 
 const authRoutes = require('./routes/authRoutes');
+const servicoRoutes = require('./routes/servicoRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -19,6 +20,7 @@ app.get('/health', (request, response) => {
 
 // Registrar rotas de autenticação (ex: /auth/registrar e /auth/login)
 app.use('/auth', authRoutes);
+app.use('/servicos', servicoRoutes);
 
 app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando na porta ${PORT}`);
