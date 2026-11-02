@@ -20,6 +20,7 @@ Eliminar conflitos de horários na agenda, oferecer controle detalhado sobre os 
 O propósito dessa integração é fornecer valor prático às tomadas de decisão de clientes e barbeiros. Ao realizar a listagem de agendamentos (GET /agendamentos), a aplicação realiza chamadas assíncronas em tempo real consultando os dados climáticos previstos para o horário exato do corte (timezone: UTC).
 
 **Utilidade da API:**
+
 **Para o Cliente:** Permite antecipar condições adversas de tempo (como alta probabilidade de chuva ou temperaturas extremas) no horário exato do seu deslocamento até a barbearia.
 
 **Para a Barbearia:** Auxilia no gerenciamento de eventuais imprevistos ou atrasos causados por tempestades em horários específicos.
