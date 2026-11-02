@@ -1,4 +1,5 @@
 const prisma = require('../database/prisma');
+const climaService = require('../services/climaService');
 
 class AgendamentoController {
   // POST /agendamentos
@@ -114,7 +115,18 @@ class AgendamentoController {
         },
       });
 
-      return res.status(200).json(agendamentos);
+      // Busca a previsão do tempo de forma assíncrona para cada agendamento
+      const agendamentosComClima = await Promise.all(
+        agendamentos.map(async (agendamento) => {
+          const clima = await climaService.obterPrevisaoTempo(agendamento.data_hora);
+          return {
+            ...agendamento,
+            previsao_tempo: clima
+          };
+        })
+      );
+
+      return res.status(200).json(agendamentosComClima);
     } catch (error) {
       return res.status(500).json({ 
         mensagem: 'Erro ao listar agendamentos.', 

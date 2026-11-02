@@ -15,6 +15,18 @@ Eliminar conflitos de horários na agenda, oferecer controle detalhado sobre os 
 
 ---
 
+**API externa escolhida:** No desenvolvimento do sistema de agendamentos da barbearia, foi integrada a Open-Meteo Weather Forecast API (uma API pública de dados meteorológicos).
+
+O propósito dessa integração é fornecer valor prático às tomadas de decisão de clientes e barbeiros. Ao realizar a listagem de agendamentos (GET /agendamentos), a aplicação realiza chamadas assíncronas em tempo real consultando os dados climáticos previstos para o horário exato do corte (timezone: UTC).
+
+**Utilidade da API:**
+**Para o Cliente:** Permite antecipar condições adversas de tempo (como alta probabilidade de chuva ou temperaturas extremas) no horário exato do seu deslocamento até a barbearia.
+
+**Para a Barbearia:** Auxilia no gerenciamento de eventuais imprevistos ou atrasos causados por tempestades em horários específicos.
+
+
+---
+
 ## 🗄 2. Entidades Principais e Modelagem (DER)
 
 O sistema conta com **3 entidades de negócio** principais:
