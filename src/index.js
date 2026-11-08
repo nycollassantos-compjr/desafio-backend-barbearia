@@ -2,8 +2,10 @@ const express = require('express');
 require('dotenv').config();
 
 const authRoutes = require('./routes/authRoutes');
+const usuarioRoutes = require('./routes/usuarioRoutes');
 const servicoRoutes = require('./routes/servicoRoutes');
 const agendamentoRoutes = require('./routes/agendamentoRoutes');
+const errorMiddleware = require('./middlewares/errorMiddleware');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -19,10 +21,12 @@ app.get('/health', (request, response) => {
     });
 });
 
-// Registrar rotas de autenticação (ex: /auth/registrar e /auth/login)
+// Registrar rotas
 app.use('/auth', authRoutes);
+app.use('/usuarios', usuarioRoutes);
 app.use('/servicos', servicoRoutes);
 app.use('/agendamentos', agendamentoRoutes);
+app.use(errorMiddleware);
 
 app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando na porta ${PORT}`);

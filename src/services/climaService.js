@@ -39,8 +39,14 @@ async function obterPrevisaoTempo(dataHoraISO, lat = -21.248, lon = -44.996) {
       const temperatura = hourly.temperature_2m[indiceHora];
       const probabilidadeChuva = hourly.precipitation_probability[indiceHora];
 
+      const horaFormatadaLocal = dataObj.toLocaleTimeString('pt-BR', {
+        timeZone: 'America/Sao_Paulo',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
       return {
-        horario: `${String(horaAgendamento).padStart(2, '0')}:00`,
+        horario: horaFormatadaLocal,
         temperatura: `${temperatura}°C`,
         probabilidade_chuva: `${probabilidadeChuva}%`
       };

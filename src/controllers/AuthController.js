@@ -4,7 +4,7 @@ const prisma = require('../database/prisma');
 
 class AuthController {
   // POST /auth/registrar
-  async registrar(req, res) {
+  async registrar(req, res, next) {
     try {
       const { nome, email, senha, telefone, perfil } = req.body;
 
@@ -48,12 +48,12 @@ class AuthController {
         usuario: novoUsuario,
       });
     } catch (error) {
-      return res.status(500).json({ mensagem: 'Erro interno no servidor.', erro: error.message });
+      next(error); // Passa o erro para o middleware de tratamento de erros
     }
   }
 
   // POST /auth/login
-  async login(req, res) {
+  async login(req, res, next) {
     try {
       const { email, senha } = req.body;
 
@@ -93,7 +93,7 @@ class AuthController {
         },
       });
     } catch (error) {
-      return res.status(500).json({ mensagem: 'Erro interno no servidor.', erro: error.message });
+        next(error); // Passa o erro para o middleware de tratamento de erros
     }
   }
 }

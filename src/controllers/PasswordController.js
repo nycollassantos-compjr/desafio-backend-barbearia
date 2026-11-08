@@ -5,7 +5,7 @@ const { enviarEmailRecuperacao } = require('../services/mailService');
 
 class PasswordController {
   // POST /auth/esqueci-senha
-  async esqueciSenha(req, res) {
+  async esqueciSenha(req, res, next) {
     try {
       const { email } = req.body;
 
@@ -40,12 +40,12 @@ class PasswordController {
         mensagem: 'E-mail de recuperação enviado com sucesso!',
       });
     } catch (error) {
-      return res.status(500).json({ mensagem: 'Erro ao processar solicitação de recuperação.', erro: error.message });
+        next(error);
     }
   }
 
   // POST /auth/redefinir-senha
-  async redefinirSenha(req, res) {
+  async redefinirSenha(req, res, next) {
     try {
       const { token, novaSenha } = req.body;
 
@@ -86,7 +86,7 @@ class PasswordController {
         mensagem: 'Senha redefinida com sucesso! Você já pode fazer login com a nova senha.',
       });
     } catch (error) {
-      return res.status(500).json({ mensagem: 'Erro ao redefinir a senha.', erro: error.message });
+        next(error); // Passa o erro para o middleware de tratamento de erros
     }
   }
 }

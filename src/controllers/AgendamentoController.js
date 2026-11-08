@@ -1,9 +1,28 @@
 const prisma = require('../database/prisma');
 const climaService = require('../services/climaService');
 
+// Auxiliar: Converte string de data/hora no Horário de Brasília para Date UTC (adiciona sufixo -03:00 se necessário)
+function brasiliaParaUTC(dataHoraLocalStr) {
+  if (typeof dataHoraLocalStr !== 'string') return new Date(NaN);
+  
+  const isoComTimezone = dataHoraLocalStr.endsWith('Z') || dataHoraLocalStr.includes('-03:00')
+    ? dataHoraLocalStr 
+    : `${dataHoraLocalStr}-03:00`;
+  
+  return new Date(isoComTimezone);
+}
+
+// Auxiliar: Formata data UTC gravada no banco para exibição legível em Horário de Brasília
+function utcParaBrasilia(dataUTC) {
+  const dataObj = new Date(dataUTC);
+  if (isNaN(dataObj.getTime())) return null;
+
+  return dataObj.toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+}
+
 class AgendamentoController {
   // POST /agendamentos
-  async criar(req, res) {
+  async criar(req, res, next) {
     try {
       const { servico_id, data_hora, observacoes } = req.body;
       const usuario_id = req.usuarioId;
@@ -23,8 +42,8 @@ class AgendamentoController {
         });
       }
 
-      // 3. Regra de Negócio: Impedir agendamento no passado
-      const inicioNovo = new Date(data_hora);
+      // 3. Regra de Negócio: Tratar entrada como Horário de Brasília e converter para UTC
+      const inicioNovo = brasiliaParaUTC(data_hora);
       if (isNaN(inicioNovo.getTime())) {
         return res.status(400).json({ mensagem: 'Formato de data/hora inválido.' });
       }
@@ -57,7 +76,6 @@ class AgendamentoController {
           inicioExistente.getTime() + agendamento.servico.duracao_minutos * 60000
         );
 
-        // Checa se os intervalos se cruzam
         return inicioNovo < fimExistente && fimNovo > inicioExistente;
       });
 
@@ -67,7 +85,7 @@ class AgendamentoController {
         });
       }
 
-      // 7. Salvar o agendamento no banco
+      // 7. Salvar o agendamento no banco em UTC
       const novoAgendamento = await prisma.agendamento.create({
         data: {
           usuario_id,
@@ -88,18 +106,18 @@ class AgendamentoController {
 
       return res.status(201).json({
         mensagem: 'Agendamento realizado com sucesso!',
-        agendamento: novoAgendamento,
+        agendamento: {
+          ...novoAgendamento,
+          data_hora_local: utcParaBrasilia(novoAgendamento.data_hora),
+        },
       });
     } catch (error) {
-      return res.status(500).json({ 
-        mensagem: 'Erro ao criar agendamento.', 
-        erro: error.message 
-      });
+      next(error);
     }
   }
 
   // GET /agendamentos
-  async listar(req, res) {
+  async listar(req, res, next) {
     try {
       const usuario_id = req.usuarioId;
       const perfil = req.usuarioPerfil;
@@ -115,12 +133,13 @@ class AgendamentoController {
         },
       });
 
-      // Busca a previsão do tempo de forma assíncrona para cada agendamento
+      // Busca a previsão do tempo usando a data UTC do banco e anexa a data formatada em Horário de Brasília
       const agendamentosComClima = await Promise.all(
         agendamentos.map(async (agendamento) => {
           const clima = await climaService.obterPrevisaoTempo(agendamento.data_hora);
           return {
             ...agendamento,
+            data_hora_local: utcParaBrasilia(agendamento.data_hora),
             previsao_tempo: clima
           };
         })
@@ -128,15 +147,12 @@ class AgendamentoController {
 
       return res.status(200).json(agendamentosComClima);
     } catch (error) {
-      return res.status(500).json({ 
-        mensagem: 'Erro ao listar agendamentos.', 
-        erro: error.message 
-      });
+      next(error);
     }
   }
 
   // PATCH /agendamentos/:id/cancelar
-  async cancelar(req, res) {
+  async cancelar(req, res, next) {
     try {
       const { id } = req.params;
       const usuario_id = req.usuarioId;
@@ -165,13 +181,13 @@ class AgendamentoController {
 
       return res.status(200).json({
         mensagem: 'Agendamento cancelado com sucesso!',
-        agendamento: agendamentoAtualizado,
+        agendamento: {
+          ...agendamentoAtualizado,
+          data_hora_local: utcParaBrasilia(agendamentoAtualizado.data_hora),
+        },
       });
     } catch (error) {
-      return res.status(500).json({ 
-        mensagem: 'Erro ao cancelar agendamento.', 
-        erro: error.message 
-      });
+      next(error);
     }
   }
 }

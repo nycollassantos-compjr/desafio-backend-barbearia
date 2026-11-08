@@ -2,7 +2,7 @@ const prisma = require('../database/prisma');
 
 class ServicoController {
   // POST /servicos (Apenas ADMIN)
-  async criar(req, res) {
+  async criar(req, res, next) {
     try {
       const { nome, descricao, duracao_minutos, preco } = req.body;
 
@@ -28,15 +28,12 @@ class ServicoController {
         servico: novoServico,
       });
     } catch (error) {
-      return res.status(500).json({ 
-        mensagem: 'Erro ao cadastrar serviço.', 
-        erro: error.message 
-      });
+        next(error); // Passa o erro para o middleware de tratamento de erros
     }
   }
 
   // GET /servicos (Lista apenas serviços ativos)
-  async listar(req, res) {
+  async listar(req, res, next) {
     try {
       const servicos = await prisma.servico.findMany({
         where: { ativo: true },
@@ -45,15 +42,12 @@ class ServicoController {
 
       return res.status(200).json(servicos);
     } catch (error) {
-      return res.status(500).json({ 
-        mensagem: 'Erro ao listar serviços.', 
-        erro: error.message 
-      });
+        next(error); // Passa o erro para o middleware de tratamento de erros
     }
   }
 
   // PUT /servicos/:id (Apenas ADMIN)
-  async atualizar(req, res) {
+  async atualizar(req, res, next) {
     try {
       const { id } = req.params;
       const { nome, descricao, duracao_minutos, preco, ativo } = req.body;
@@ -81,15 +75,12 @@ class ServicoController {
         servico: servicoAtualizado,
       });
     } catch (error) {
-      return res.status(500).json({ 
-        mensagem: 'Erro ao atualizar serviço.', 
-        erro: error.message 
-      });
+        next(error); // Passa o erro para o middleware de tratamento de erros
     }
   }
 
   // DELETE /servicos/:id (Apenas ADMIN - Soft Delete / Desativação)
-  async deletar(req, res) {
+  async deletar(req, res, next) {
     try {
       const { id } = req.params;
 
@@ -108,10 +99,7 @@ class ServicoController {
         mensagem: 'Serviço desativado com sucesso!',
       });
     } catch (error) {
-      return res.status(500).json({ 
-        mensagem: 'Erro ao desativar serviço.', 
-        erro: error.message 
-      });
+        next(error); // Passa o erro para o middleware de tratamento de erros
     }
   }
 }
