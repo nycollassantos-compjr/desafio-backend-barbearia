@@ -90,10 +90,19 @@ cd desafio-backend-barbearia
 Crie um arquivo `.env` na raiz do projeto (se preferir, copie o modelo `.env.example`):
 
 ```env
-PORT=3001
-DATABASE_URL="postgresql://postgres:postgrespassword@postgres:5432/barbearia_db?schema=public"
-JWT_SECRET="sua_chave_secreta_aqui"
-```
+   # Servidor e Banco de Dados
+   PORT=3001
+   DATABASE_URL="postgresql://postgres:postgrespassword@postgres:5432/barbearia_db?schema=public"
+   
+   # Autenticação
+   JWT_SECRET="sua_chave_secreta_jwt_aqui"
+   
+   # Configuração do Servidor de E-mail (Mailtrap)
+   MAIL_HOST=sandbox.smtp.mailtrap.io
+   MAIL_PORT=2525
+   MAIL_USER=seu_usuario_mailtrap
+   MAIL_PASS=sua_senha_mailtrap
+   MAIL_FROM="no-reply@barbearia.com"
 
 **3. Subir os containers (aplicação + banco)**
 
