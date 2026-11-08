@@ -1,0 +1,450 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: Testando sistemaBarbearia
+meta:
+  id: wrk_baee5b89ee074f989ccc2dc299ab45cc
+  created: 1791645711881
+  modified: 1791645767338
+  description: ""
+collection:
+  - url: "{{ _['Variáveis'].base_url }}/health"
+    name: Health Check
+    meta:
+      id: req_f43aed15a3c447dab1b9cd0b77e56bc6
+      created: 1791645712147
+      modified: 1794157889534
+      isPrivate: false
+      description: ""
+      sortKey: -1791645712148
+    method: GET
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - name: Auth
+    meta:
+      id: fld_bad18b121e17472188895c23b9ef628d
+      created: 1794159370132
+      modified: 1794159520627
+      sortKey: -1794159500185
+      description: ""
+    children:
+      - url: "{{ _['Variáveis'].base_url }}/auth/registrar"
+        name: Cadastro usuário
+        meta:
+          id: req_828547e156854582b9f1e32c15cc1036
+          created: 1791645902128
+          modified: 1794159392469
+          isPrivate: false
+          description: ""
+          sortKey: -1794159392375
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "nome": "Nycollas Richard",
+              "email": "nycollas@email.com",
+              "senha": "senha123segura",
+              "telefone": "35999999999"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _['Variáveis'].base_url }}/auth/login"
+        name: Login usuário
+        meta:
+          id: req_dd4438815e724a2a81e763fb4b91134a
+          created: 1792192882650
+          modified: 1794164880335
+          isPrivate: false
+          description: ""
+          sortKey: -1794159392275
+        method: POST
+        body:
+          mimeType: application/json
+          text: |
+            {
+              "email": "pereira@email.com",
+              "senha": "#senha246"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _['Variáveis'].base_url }}/auth/esqueci-senha"
+        name: Recuperação de senha
+        meta:
+          id: req_13583dae34f242f1a640c1ace60bd943
+          created: 1793385239747
+          modified: 1794159419223
+          isPrivate: false
+          description: ""
+          sortKey: -1794159392175
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "email": "pereira@email.com"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _['Variáveis'].base_url }}/auth/redefinir-senha"
+        name: Redefinir senha
+        meta:
+          id: req_2b14e46d14704ee9932ecc02f48581a9
+          created: 1793385652548
+          modified: 1794164779162
+          isPrivate: false
+          description: ""
+          sortKey: -1794159392075
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "token": "9d3fbf4c2258aa989eb895ed5c336550b9336d09",
+              "novaSenha": "#senha246"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Usuário
+    meta:
+      id: fld_ebc3e090d23e47349dd9366dc65a02d3
+      created: 1794159444380
+      modified: 1794159444380
+      sortKey: -1794159444380
+      description: ""
+    children:
+      - url: "{{ _['Variáveis'].base_url }}/usuarios"
+        name: Listar usuários
+        meta:
+          id: req_eb7a60ffc43147268b0d8551b011bb7e
+          created: 1794143313166
+          modified: 1794159453833
+          isPrivate: false
+          description: ""
+          sortKey: -1794159453742
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _['Variáveis'].token_admin }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _['Variáveis'].base_url }}/usuarios/me"
+        name: Update usuário
+        meta:
+          id: req_e845cc939d1c43b29e331b6b0cca8b3b
+          created: 1794145900508
+          modified: 1794165193050
+          isPrivate: false
+          description: ""
+          sortKey: -1794159453642
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "nome": "Anderson Santos",
+              "email": "santos@email.com",
+              "telefone": "35999999888"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _['Variáveis'].token_cliente }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _['Variáveis'].base_url }}/usuarios/{{ _['Variáveis'].usuario_id }}"
+        name: Deletar usuário
+        meta:
+          id: req_8d04b21a04594d7b905d78969c9fab72
+          created: 1794146404051
+          modified: 1794165212574
+          isPrivate: false
+          description: ""
+          sortKey: -1794159453542
+        method: DELETE
+        authentication:
+          type: bearer
+          token: "{{ _['Variáveis'].token_admin }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Serviço
+    meta:
+      id: fld_b2496d2cd673440c87e1c3f03de456c9
+      created: 1794159475735
+      modified: 1794159475735
+      sortKey: -1794159475735
+      description: ""
+    children:
+      - url: "{{ _['Variáveis'].base_url }}/servicos"
+        name: Cadastro serviço
+        meta:
+          id: req_38e3b8c38af04d64a768b8f3516dc11e
+          created: 1792980248108
+          modified: 1794164562924
+          isPrivate: false
+          description: ""
+          sortKey: -1794159480472
+        method: POST
+        body:
+          mimeType: application/json
+          text: >-
+            {
+              "nome": "Pintura de Cabelo",
+              "descricao": "Aplicação de tintura para mudança ou uniformização da cor dos cabelos",
+              "duracao_minutos": 60,
+              "preco": 70.00
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _['Variáveis'].token_admin }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _['Variáveis'].base_url }}/servicos"
+        name: Listar serviços
+        meta:
+          id: req_51301d76180a4cf7882c23f7afd52f8d
+          created: 1792980870738
+          modified: 1794165395648
+          isPrivate: false
+          description: ""
+          sortKey: -1794159480372
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _['Variáveis'].token_cliente }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _['Variáveis'].base_url }}/servicos/{{ _['Variáveis'].servico_id }}"
+        name: Update serviço
+        meta:
+          id: req_d4b6790cbdb64119997856e3a36ae364
+          created: 1792981281709
+          modified: 1794159485933
+          isPrivate: false
+          description: ""
+          sortKey: -1794159480272
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "nome": "Corte de Cabelo",
+              "descricao": "Corte social ou degradê",
+              "duracao_minutos": 60,
+              "preco": 35.00
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _['Variáveis'].token_admin }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _['Variáveis'].base_url }}/servicos/{{ _['Variáveis'].servico_id }}"
+        name: Deletar serviço
+        meta:
+          id: req_345d34d7f6824f48bc27ccfd5ac04276
+          created: 1792981625750
+          modified: 1794159488730
+          isPrivate: false
+          description: ""
+          sortKey: -1794159480172
+        method: DELETE
+        authentication:
+          type: bearer
+          token: "{{ _['Variáveis'].token_admin }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Agendamento
+    meta:
+      id: fld_32237054fdae48338f2acc48b7a5dda0
+      created: 1794159500085
+      modified: 1794159500085
+      sortKey: -1794159500085
+      description: ""
+    children:
+      - url: "{{ _['Variáveis'].base_url }}/agendamentos"
+        name: Cadastro agendamento
+        meta:
+          id: req_199007af8075456eb9800e6694556df7
+          created: 1793380827767
+          modified: 1794159507872
+          isPrivate: false
+          description: ""
+          sortKey: -1794159504497
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+              "servico_id": "{{ _['Variáveis'].servico_id }}",
+              "data_hora": "2026-11-10T14:25:01.000Z",
+              "observacoes": "Preferência por corte na tesoura"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+        authentication:
+          type: bearer
+          token: "{{ _['Variáveis'].token_cliente }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _['Variáveis'].base_url }}/agendamentos"
+        name: Listar agendamentos
+        meta:
+          id: req_a67dd8ba008c4898a83c4dd4e8967100
+          created: 1793381487921
+          modified: 1794159504497
+          isPrivate: false
+          description: ""
+          sortKey: -1794159504397
+        method: GET
+        authentication:
+          type: bearer
+          token: "{{ _['Variáveis'].token_cliente }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ _['Variáveis'].base_url }}/agendamentos/{{
+          _['Variáveis'].agendamento_id }}/cancelar"
+        name: Cancelar agendamento
+        meta:
+          id: req_aa1cd6d70d9f4491a96a984bfd21659a
+          created: 1793382679909
+          modified: 1794164999359
+          isPrivate: false
+          description: ""
+          sortKey: -1794159504297
+        method: PATCH
+        authentication:
+          type: bearer
+          token: "{{ _['Variáveis'].token_admin }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_6f77f1c00688d02ede9391b4c0f92c2ffd5cfd96
+    created: 1791645711893
+    modified: 1791645711893
+environments:
+  name: Base Environment
+  meta:
+    id: env_6f77f1c00688d02ede9391b4c0f92c2ffd5cfd96
+    created: 1791645711886
+    modified: 1794165363538
+    isPrivate: false
+  data:
+    Variáveis:
+      base_url: http://localhost:3001
+      token_admin: ""
+      token_cliente: ""
+      servico_id: 276b22a1-7a2a-4bbe-a7b9-957e0f46e821
+      agendamento_id: d21509e1-f4f8-45fa-aafa-905d223380dc
+      usuario_id: ""
