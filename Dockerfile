@@ -21,4 +21,5 @@ COPY . .
 EXPOSE 3001
 
 # Para que o banco crie as tabelas automaticamente
-CMD ["sh", "-c", "npx prisma db push && npm run dev"]
+# Substitua a linha 24 do Dockerfile por:
+    CMD ["sh", "-c", "until npx prisma db push; do echo 'Aguardando banco de dados...'; sleep 2; done && npm run dev"]
