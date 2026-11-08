@@ -63,7 +63,7 @@ erDiagram
         uuid usuario_id FK
         uuid servico_id FK
         datetime data_hora
-        string status "AGENDADO | CONCLUIDO | CANCELADO | INDISPONIVEL"
+        string status "AGENDADO | CANCELADO"
         string observacoes
     }
 ```
