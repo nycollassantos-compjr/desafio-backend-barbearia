@@ -14,9 +14,7 @@ enum Perfil {
 
 enum StatusAgendamento {
   AGENDADO
-  CONCLUIDO
   CANCELADO
-  INDISPONIVEL
 }
 
 model Usuario {
